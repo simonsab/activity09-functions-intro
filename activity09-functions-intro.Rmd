@@ -1,6 +1,6 @@
 ---
 title: "Activity 9"
-author: "Name"
+author: Abby S.
 output: github_document
 ---
 
@@ -14,6 +14,10 @@ In this activity, we will create a function for calculating the range of a numer
 
 To begin, we need `{tidyverse}` and `{gapminder}` (for a dataset to test our functions with) packages loaded.
 
+```{r load_packages, messages = FALSE}
+library(tidyverse)
+gapminder
+```
 
 
 
@@ -27,6 +31,15 @@ Remember that in statistics *range = max - min*.
 Describe how you could you use the output from some combination of the above functions to calculate the range?
 Note that I can think of two different methods: 1) using `min` and `max`, and 2) using `range` with the square bracket (`[]`) method.
 
+```{r}
+range(gapminder$year)
+min(gapminder$year)
+max(gapminder$year)
+
+range(gapminder$lifeExp)
+min(gapminder$lifeExp)
+max(gapminder$lifeExp)
+```
 
 
 
@@ -66,12 +79,6 @@ diff_values <- larger_value - smaller_value
 Now I see that `gapminder$lifeExp` is the only thing that changes whenever I want to calculate the range so I have an outline for my function!
 Remember that a function has three main parts: 1) a name, 2) arguments, and 3) a body.
 
-```
-function_name <- function(function_arguments){
-  function_body
-}
-```
-
 We will need to provide meaningful name that is different from "`range`" since this is an object that already exists in R - remember namespace issues.
 I will call this `diff_range`.
 Below, create our new range function that, when supplied with a variable/vector `x`, returns the statistical range.
@@ -93,6 +100,13 @@ Test this function to verify that it works.
 Below check this function using the `lifeExp` column of the `gapminder` dataset.
 Also, verify that it gets the correct result for `1:10` (a sequence of numbers starting at 1 and ending at 10, increasing by 1), `5:100`, `gapminder$pop` (the population of each country in the `gapminder` data set), and `gapminder$gdpPercap`.
 
+```{r test_function, message = FALSE}
+#diff_range(list(1:10, 5:500))
+diff_range(1:10)
+diff_range(5:500)
+diff_range(gapminder$pop)
+diff_range(gapminder$gdpPercap)
+```
 
 
 
@@ -109,17 +123,37 @@ Convince yourself that you know how to use it by being able to explain what the 
 - `quantile(gapminder$lifeExp, probs = c(0.25, 0.75))`
 
 Also, explore this function with different `probs`.
-
-
+```{r}
+quantile(gapminder$lifeExp)
+quantile(gapminder$lifeExp, probs = 0.5)
+quantile(gapminder$lifeExp, probs = c(0.25, 0.75))
+```
 
 Once, you feel comfortable with the `quantile` function, create a function named `quantile_range` that calculates the statistical range.
 
+```{r}
+
+quantile_range <- function(x){
+  qmin <- quantile(x, probs = 0.00)
+  qmax <- quantile(x, probs = 1.00)
+  qrange <- qmax - qmin
+  return(qrange)
+  
+}
+
+```
 
 
 Test your function to verify that it works.
 Below check this function using the `lifeExp` column of the `gapminder` dataset.
 Also, verify that it gets the correct result for `1:10` (a sequence of numbers starting at 1 and ending at 10, increasing by 1), `5:100`, `gapminder$pop` (the population of each country in the `gapminder` data set), and `gapminder$gdpPercap`.
 
+```{r test_qfunction}
+quantile_range(1:10)
+quantile_range(5:500)
+quantile_range(gapminder$pop)
+quantile_range(gapminder$gdpPercap)
+```
 
 
 ![](README-img/noun_pause.png) **Planned Pause Point**: This is the end of Part 1 of this activity. You can use the rest of the class period working on your project. The rest of this activity will be completed in our next class session/at home.
@@ -136,7 +170,12 @@ When we write functions, we should also make sure that it fails when we expect i
 
 Below, check that our function breaks for each of the above tests.
 
+```{r test_qfunction}
+quantile_range(gapminder)
+quantile_range("Go Lakers")
+quantile_range(gapminder$country)
 
+```
 For functions that will be used again, it is a good practice to add argument validity checks.
 
 - `stopifnot` is a way to make sure the function arguments are of a specific type.
@@ -151,6 +190,7 @@ For functions that will be used again, it is a good practice to add argument val
 ```
 
 Explore the two argument validity checks by adding them to the beginning of your function above (one, then remove it and add the other) to check if the input `x` is a numeric vector (`is.numeric`).
+
 
 
 
